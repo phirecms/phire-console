@@ -1,2 +1,4 @@
-# phire-cli
-CLI module for Phire CMS 2 
+Phire CLI Module
+====================
+
+CLI module for Phire CMS 2
