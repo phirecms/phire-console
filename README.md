@@ -1,4 +1,4 @@
-Phire CLI Module
+Phire Console Module
 ====================
 
-CLI module for Phire CMS 2
+Console module for Phire CMS 2
