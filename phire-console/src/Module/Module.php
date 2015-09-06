@@ -47,8 +47,10 @@ class Module extends \Pop\Module\Module
         // Set up triggers to check the application session
         $this->application->on('app.route.post', 'Phire\Event\Db::check', 1000);
         $this->application->on('app.route.pre', function(){
-            echo PHP_EOL . '    Phire Console' . PHP_EOL;
-            echo '    =============' . PHP_EOL . PHP_EOL;
+            if (isset($_SERVER['argv'][1]) && (($_SERVER['argv'][1] != 'sql') && ($_SERVER['argv'][1] != 'archive'))) {
+                echo PHP_EOL . '    Phire Console' . PHP_EOL;
+                echo '    =============' . PHP_EOL . PHP_EOL;
+            }
         }, 1000);
         $this->application->on('app.dispatch.post', function(){
             echo PHP_EOL . PHP_EOL;

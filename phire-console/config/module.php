@@ -9,7 +9,7 @@ return [
     'phire-console' => [
         'prefix'     => 'Phire\Console\\',
         'src'        => __DIR__ . '/../src',
-        'routes'     => include 'routes.php',
+        'cli-routes' => include 'routes.php',
         'install'    => function(){
             copy(__DIR__ . '/../script/phire', __DIR__ . '/../../../phire');
             copy(__DIR__ . '/../script/phire.bat', __DIR__ . '/../../../phire.bat');
