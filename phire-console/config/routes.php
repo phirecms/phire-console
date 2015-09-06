@@ -1,8 +1,11 @@
 <?php
 
 return [
-    'help' => [
+    '<controller> [<action>]' => [
+        'prefix' => 'Phire\Console\Controller\\'
+    ],
+    '*' => [
         'controller' => 'Phire\Console\Controller\ConsoleController',
-        'action'     => 'help'
+        'action'     => 'error'
     ]
 ];

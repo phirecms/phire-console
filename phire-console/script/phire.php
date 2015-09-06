@@ -1,8 +1,16 @@
-#!/usr/bin/php
 <?php
 /**
  * phire-console main CLI PHP script
  */
+
+if ((stripos(php_sapi_name(), 'cli') === false) || (stripos(php_sapi_name(), 'server') !== false)) {
+    header('Content-Type: text/html');
+    echo '<!DOCTYPE html>' . PHP_EOL .
+         '<html><head><title>HTTP 403 (Forbidden)</title>' .
+         '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><meta name="robots" content="none" /></head>' .
+         '<body><h1>HTTP 403 (Forbidden)</h1></body></html>';
+    exit();
+}
 
 require_once __DIR__  . '/../config.php';
 

@@ -46,6 +46,13 @@ class Module extends \Pop\Module\Module
 
         // Set up triggers to check the application session
         $this->application->on('app.route.post', 'Phire\Event\Db::check', 1000);
+        $this->application->on('app.route.pre', function(){
+            echo PHP_EOL . '    Phire Console' . PHP_EOL;
+            echo '    =============' . PHP_EOL . PHP_EOL;
+        }, 1000);
+        $this->application->on('app.dispatch.post', function(){
+            echo PHP_EOL . PHP_EOL;
+        }, 1000);
 
         return $this;
     }
@@ -62,11 +69,14 @@ class Module extends \Pop\Module\Module
         if (stripos(PHP_OS, 'win') === false) {
             $string  = "    \x1b[1;37m\x1b[41m    " . str_repeat(' ', strlen($message)) . "    \x1b[0m" . PHP_EOL;
             $string .= "    \x1b[1;37m\x1b[41m    " . $message . "    \x1b[0m" . PHP_EOL;
-            $string .= "    \x1b[1;37m\x1b[41m    " . str_repeat(' ', strlen($message)) . "    \x1b[0m";
+            $string .= "    \x1b[1;37m\x1b[41m    " . str_repeat(' ', strlen($message)) . "    \x1b[0m" . PHP_EOL . PHP_EOL;
+            $string .= "    Try \x1b[1;33m./phire help\x1b[0m for help" . PHP_EOL . PHP_EOL;
         } else {
-            $string = $message;
+            $string = $message . PHP_EOL . PHP_EOL;
+            $string .= '    Try \'./phire help\' for help' . PHP_EOL . PHP_EOL;
         }
-        echo PHP_EOL . $string . PHP_EOL . PHP_EOL;
+
+        echo $string;
         exit(127);
     }
 

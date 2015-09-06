@@ -93,46 +93,24 @@ class ConsoleController extends \Pop\Controller\AbstractController
     }
 
     /**
-     * Help action method
+     * Version action method
      *
      * @return void
      */
-    public function help()
+    public function version()
     {
-        echo 'Help!' . PHP_EOL;
+        echo 'Version' . PHP_EOL;
     }
 
     /**
      * Default error action method
      *
+     * @throws \Phire\Exception
      * @return void
      */
     public function error()
     {
-        $this->send();
-    }
-
-    /**
-     * Send response
-     *
-     * @param  string $body
-     * @return void
-     */
-    public function send($body = null)
-    {
-        $this->application->trigger('app.send.pre', ['controller' => $this]);
-
-        /*
-        if (null !== $body) {
-            $this->response->setBody($body);
-        } else if (null !== $this->view) {
-            $this->response->setBody($this->view->render());
-        }
-        */
-
-        $this->application->trigger('app.send.post', ['controller' => $this]);
-
-        //$this->response->send($code, $headers);
+        throw new \Phire\Exception('Invalid Command');
     }
 
 }
