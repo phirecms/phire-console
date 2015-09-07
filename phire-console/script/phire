@@ -33,65 +33,69 @@ PGSQL_DUMP=${PGSQL_DUMP// /\\ }
 SQLITE_CLI=${SQLITE_CLI// /\\ }
 SQLITE_DUMP=${SQLITE_DUMP// /\\ }
 
-if [ "$1" = "sql" ] || [ "$1" = "archive" ]; then
-    if [ "$1" = "sql" ] && [ "$2" = "" ]; then
-        echo;
-        echo "    You must enter a SQL command. Try ./phire help for help."
-        echo;
-    fi;
+if [ "$CYG_PATH" != "" ]; then
+    php $SCRIPT_PATH
+else
+    if [ "$1" = "sql" ] || [ "$1" = "archive" ]; then
+        if [ "$1" = "sql" ] && [ "$2" = "" ]; then
+            echo;
+            echo "    You must enter a SQL command. Try ./phire help for help."
+            echo;
+        fi;
 
-    if [ "$2" = "cli" ]; then
-        DBTYPE=`php $SCRIPT_PATH`
-        DBSTRING=`php $SCRIPT_PATH $DBTYPE`
-        if [ "$DBTYPE" = "mysql" ] && [ "$MYSQL_CLI" != "" ] && [ "$DBSTRING" != "" ]; then
-            eval "$MYSQL_CLI $DBSTRING"
-        elif [ "$DBTYPE" = "pgsql" ] && [ "$PGSQL_CLI" != "" ] && [ "$DBSTRING" != "" ]; then
-            eval "$PGSQL_CLI $DBSTRING"
-        elif [ "$DBTYPE" = "sqlite" ] && [ "$SQLITE_CLI" != "" ] && [ "$DBSTRING" != "" ]; then
-            eval "$SQLITE_CLI $DBSTRING"
-        else
-            echo;
-            echo "    The SQL CLI client could not be found."
-            echo;
-        fi
-    elif [ "$1" = "archive" ] || [ "$2" = "dump" ]; then
-        DBTYPE=`php $SCRIPT_PATH`
-        DBSTRING=`php $SCRIPT_PATH $DBTYPE`
-        if [ "$DBTYPE" = "mysql" ] && [ "$MYSQL_DUMP" != "" ] && [ "$DBSTRING" != "" ]; then
-            eval "$MYSQL_DUMP $DBSTRING"
-            echo;
-            echo "    The MySQL database has been dumped."
-            echo;
-        elif [ "$DBTYPE" = "pgsql" ] && [ "$PGSQL_DUMP" != "" ] && [ "$DBSTRING" != "" ]; then
-            eval "$PGSQL_DUMP $DBSTRING"
-            echo;
-            echo "    The PostgreSQL database has been dumped."
-            echo;
-        elif [ "$DBTYPE" = "sqlite" ] && [ "$SQLITE_DUMP" != "" ] && [ "$DBSTRING" != "" ]; then
-            eval "$SQLITE_DUMP $DBSTRING"
-            echo;
-            echo "    The SQLite database has been dumped."
-            echo;
-        else
-            echo;
-            echo "    The SQL CLI dump client could not be found."
-            echo;
-        fi
-
-        if [ "$1" = "archive" ]; then
-            if [ "$TAR" != "" ]; then
-                "$TAR" -cvzpf "phirecms_$TIMESTAMP.tar.gz" --exclude="phirecms_$TIMESTAMP.tar.gz" ../.htaccess ../*
-                rm -f *.sql
-            elif [ "$ZIP" != "" ]; then
-                "$ZIP" -r -v --exclude="phirecms_$TIMESTAMP.zip" "phirecms_$TIMESTAMP.zip" ../.htaccess ../*
-                rm -f *.sql
+        if [ "$2" = "cli" ]; then
+            DBTYPE=`php $SCRIPT_PATH`
+            DBSTRING=`php $SCRIPT_PATH $DBTYPE`
+            if [ "$DBTYPE" = "mysql" ] && [ "$MYSQL_CLI" != "" ] && [ "$DBSTRING" != "" ]; then
+                eval "$MYSQL_CLI $DBSTRING"
+            elif [ "$DBTYPE" = "pgsql" ] && [ "$PGSQL_CLI" != "" ] && [ "$DBSTRING" != "" ]; then
+                eval "$PGSQL_CLI $DBSTRING"
+            elif [ "$DBTYPE" = "sqlite" ] && [ "$SQLITE_CLI" != "" ] && [ "$DBSTRING" != "" ]; then
+                eval "$SQLITE_CLI $DBSTRING"
             else
                 echo;
-                echo "    An archive program could not be found."
+                echo "    The SQL CLI client could not be found."
                 echo;
             fi
+        elif [ "$1" = "archive" ] || [ "$2" = "dump" ]; then
+            DBTYPE=`php $SCRIPT_PATH`
+            DBSTRING=`php $SCRIPT_PATH $DBTYPE`
+            if [ "$DBTYPE" = "mysql" ] && [ "$MYSQL_DUMP" != "" ] && [ "$DBSTRING" != "" ]; then
+                eval "$MYSQL_DUMP $DBSTRING"
+                echo;
+                echo "    The MySQL database has been dumped."
+                echo;
+            elif [ "$DBTYPE" = "pgsql" ] && [ "$PGSQL_DUMP" != "" ] && [ "$DBSTRING" != "" ]; then
+                eval "$PGSQL_DUMP $DBSTRING"
+                echo;
+                echo "    The PostgreSQL database has been dumped."
+                echo;
+            elif [ "$DBTYPE" = "sqlite" ] && [ "$SQLITE_DUMP" != "" ] && [ "$DBSTRING" != "" ]; then
+                eval "$SQLITE_DUMP $DBSTRING"
+                echo;
+                echo "    The SQLite database has been dumped."
+                echo;
+            else
+                echo;
+                echo "    The SQL CLI dump client could not be found."
+                echo;
+            fi
+
+            if [ "$1" = "archive" ]; then
+                if [ "$TAR" != "" ]; then
+                    "$TAR" -cvzpf "phirecms_$TIMESTAMP.tar.gz" --exclude="phirecms_$TIMESTAMP.tar.gz" ../.htaccess ../*
+                    rm -f *.sql
+                elif [ "$ZIP" != "" ]; then
+                    "$ZIP" -r -v --exclude="phirecms_$TIMESTAMP.zip" "phirecms_$TIMESTAMP.zip" ../.htaccess ../*
+                    rm -f *.sql
+                else
+                    echo;
+                    echo "    An archive program could not be found."
+                    echo;
+                fi
+            fi
         fi
-    fi
-else
-    php $SCRIPT_PATH
+    else
+        php $SCRIPT_PATH
+    fi;
 fi;

@@ -19,25 +19,30 @@ class SqlController extends ConsoleController
      * SQL CLI action method
      *
      * @param  string $type
+     * @throws \Phire\Exception
      * @return void
      */
     public function cli($type = null)
     {
-        if (null !== $type) {
-            switch ($type) {
-                case 'mysql':
-                    echo '--database=' . DB_NAME . ' --user=' . DB_USER . ' --password=' . DB_PASS . ' --host=' . DB_HOST;
-                    break;
-                case 'pgsql':
-                    echo '--dbname=' . DB_NAME . ' --username=' . DB_USER;
-                    break;
-                case 'sqlite':
-                    echo DB_NAME;
-                    break;
-            }
-
+        if (stripos(PHP_OS, 'win') !== false) {
+            throw new \Phire\Exception('This option is not available on Windows.');
         } else {
-            echo (DB_INTERFACE == 'pdo') ? DB_TYPE : DB_INTERFACE;
+            if (null !== $type) {
+                switch ($type) {
+                    case 'mysql':
+                        echo '--database=' . DB_NAME . ' --user=' . DB_USER . ' --password=' . DB_PASS . ' --host=' . DB_HOST;
+                        break;
+                    case 'pgsql':
+                        echo '--dbname=' . DB_NAME . ' --username=' . DB_USER;
+                        break;
+                    case 'sqlite':
+                        echo DB_NAME;
+                        break;
+                }
+
+            } else {
+                echo (DB_INTERFACE == 'pdo') ? DB_TYPE : DB_INTERFACE;
+            }
         }
     }
 
@@ -45,27 +50,32 @@ class SqlController extends ConsoleController
      * SQL Dump action method
      *
      * @param  string $type
+     * @throws \Phire\Exception
      * @return void
      */
     public function dump($type = null)
     {
-        if (null !== $type) {
-            switch ($type) {
-                case 'mysql':
-                    echo '--user=' . DB_USER . ' --password=' . DB_PASS . ' --host=' . DB_HOST . ' ' . DB_NAME .
-                        ' > ' . DB_NAME . '_' . date('Y-m-d') . '.mysql.sql';
-                    break;
-                case 'pgsql':
-                    echo '--username=' . DB_USER . ' ' . DB_NAME .
-                        ' > ' . DB_NAME . '_' . date('Y-m-d') . '.pgsql.sql';
-                    break;
-                case 'sqlite':
-                    echo DB_NAME . ' .dump > phirecms_' . date('Y-m-d') . '.sqlite.sql';
-                    break;
-            }
-
+        if (stripos(PHP_OS, 'win') !== false) {
+            throw new \Phire\Exception('This option is not available on Windows.');
         } else {
-            echo (DB_INTERFACE == 'pdo') ? DB_TYPE : DB_INTERFACE;
+            if (null !== $type) {
+                switch ($type) {
+                    case 'mysql':
+                        echo '--user=' . DB_USER . ' --password=' . DB_PASS . ' --host=' . DB_HOST . ' ' . DB_NAME .
+                            ' > ' . DB_NAME . '_' . date('Y-m-d') . '.mysql.sql';
+                        break;
+                    case 'pgsql':
+                        echo '--username=' . DB_USER . ' ' . DB_NAME .
+                            ' > ' . DB_NAME . '_' . date('Y-m-d') . '.pgsql.sql';
+                        break;
+                    case 'sqlite':
+                        echo DB_NAME . ' .dump > phirecms_' . date('Y-m-d') . '.sqlite.sql';
+                        break;
+                }
+
+            } else {
+                echo (DB_INTERFACE == 'pdo') ? DB_TYPE : DB_INTERFACE;
+            }
         }
     }
 
