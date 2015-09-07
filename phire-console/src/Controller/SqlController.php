@@ -86,7 +86,7 @@ class SqlController extends ConsoleController
      */
     public function pgsql()
     {
-        $this->dump('mysql');
+        $this->dump('pgsql');
     }
 
     /**

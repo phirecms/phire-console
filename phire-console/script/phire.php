@@ -30,14 +30,10 @@ try {
     $appConfig  = include __DIR__ . '/../' . APP_PATH . '/config/application.php';
     $config     = include MODULES_PATH . '/phire-console/config/module.php';
 
-
-
     $config['phire-console']['services'] = $appConfig['services'];
     $config['phire-console']['routes']   = $config['phire-console']['cli-routes'];
 
     $autoloader->addPsr4($config['phire-console']['prefix'], $config['phire-console']['src']);
-
-
 
     // Create and run the app as a self-contained console app
     $app = new Pop\Application($autoloader, $config['phire-console']);
@@ -47,6 +43,7 @@ try {
         $app->trigger('app.route.pre');
         throw new \Phire\Exception('The Phire Console module is not active.');
     }
+
     $app->run();
 } catch (Exception $exception) {
     $phire = new Phire\Console\Module\Module();

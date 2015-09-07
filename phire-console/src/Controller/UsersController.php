@@ -63,12 +63,17 @@ class UsersController extends ConsoleController
             $active = $this->console->prompt('    Active? (Y/N): ');
         }
 
+        $verified = '';
+        while ((strtolower($verified) != 'y') && (strtolower($verified) != 'n')) {
+            $verified = $this->console->prompt('    Verified? (Y/N): ');
+        }
+
         $fields = [
             'role_id'   => $roleId,
             'username'  => $username,
             'password1' => $password,
             'active'    => (strtolower($active) == 'y') ? 1 : 0,
-            'verified'  => 1,
+            'verified'  => (strtolower($verified) == 'y') ? 1 : 0
         ];
 
         if ($role->email_as_username) {
