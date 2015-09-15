@@ -3,6 +3,7 @@
 namespace Phire\Console\Controller;
 
 use Phire\Model;
+use Pop\Console\Console;
 
 class ConfigController extends ConsoleController
 {
@@ -18,7 +19,11 @@ class ConfigController extends ConsoleController
 
         foreach ($config->overview as $key => $value) {
             if (($key != 'domain') && ($key != 'document_root')) {
-                echo '    ' . ucwords(str_replace(['_', 'php'], [' ', 'PHP'], $key)) . ': ' . $value . PHP_EOL;
+                $this->console->write(
+                    $this->console->colorize(
+                        ucwords(str_replace(['_', 'php'], [' ', 'PHP'], $key)), Console::BOLD_GREEN
+                    ) . ': ' . $value
+                );
             }
         }
     }

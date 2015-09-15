@@ -21,15 +21,17 @@ class ModulesController extends ConsoleController
         $new     = $module->detectNew();
 
         if ($new > 0) {
-            echo '    [' . $new . ' New Module' . (($new > 1) ? 's' : '') . ' Detected]' . PHP_EOL . PHP_EOL;
+            $this->console->append('[' . $new . ' New Module' . (($new > 1) ? 's' : '') . ' Detected]' . PHP_EOL);
         }
 
-        echo "    ID  \tActive\t\tModule" . PHP_EOL;
-        echo "    ----\t------\t\t------" . PHP_EOL;
+        $this->console->append("ID  \tActive\t\tModule");
+        $this->console->append("----\t------\t\t------");
 
         foreach ($modules as $module) {
-            echo PHP_EOL . '    ' . $module->id . "\t" . (($module->active) ? 'Yes' : 'No') . "\t\t" . $module->folder;
+            $this->console->append($module->id . "\t" . (($module->active) ? 'Yes' : 'No') . "\t\t" . $module->folder);
         }
+
+        $this->console->send();
     }
 
     /**
@@ -46,7 +48,9 @@ class ModulesController extends ConsoleController
             $module->save();
         }
 
-        echo PHP_EOL . '    ' . $this->console->colorize('Module Activated!', Console::BOLD_GREEN);
+        $this->console->append();
+        $this->console->append($this->console->colorize('Module Activated!', Console::BOLD_GREEN));
+        $this->console->send();
     }
 
     /**
@@ -63,7 +67,9 @@ class ModulesController extends ConsoleController
             $module->save();
         }
 
-        echo PHP_EOL . '    ' . $this->console->colorize('Module Deactivated!', Console::BOLD_YELLOW);
+        $this->console->append();
+        $this->console->append($this->console->colorize('Module Deactivated!', Console::BOLD_YELLOW));
+        $this->console->send();
     }
 
     /**
@@ -73,16 +79,22 @@ class ModulesController extends ConsoleController
      */
     public function install()
     {
-        $module  = new Model\Module();
-        $new     = $module->detectNew();
+        $module = new Model\Module();
+        $new    = $module->detectNew();
 
         if ($new > 0) {
             $module = new Model\Module();
             $module->install($this->services);
-            echo '    ' . $this->console->colorize($new . ' Module' . (($new > 1) ? 's' : '') . ' Installed!', Console::BOLD_GREEN);
+            $this->console->append($this->console->colorize(
+                $new . ' Module' . (($new > 1) ? 's' : '') . ' Installed!', Console::BOLD_GREEN)
+            );
         } else {
-            echo '    ' . $this->console->colorize('No new modules detected.', Console::BOLD_YELLOW);
+            $this->console->append(
+                $this->console->colorize('No new modules detected.', Console::BOLD_YELLOW)
+            );
         }
+
+        $this->console->send();
     }
 
     /**
@@ -95,7 +107,9 @@ class ModulesController extends ConsoleController
         $moduleId = $this->getModuleId();
         $module   = new Model\Module();
         $module->process(['rm_modules' => [$moduleId]], $this->services);
-        echo PHP_EOL . '    ' . $this->console->colorize('Module removed.', Console::BOLD_RED);
+        $this->console->append();
+        $this->console->append($this->console->colorize('Module removed.', Console::BOLD_RED));
+        $this->console->send();
     }
 
     /**
@@ -111,22 +125,23 @@ class ModulesController extends ConsoleController
         $moduleIds = [];
 
         if ($new > 0) {
-            echo '    [' . $new . ' New Module' . (($new > 1) ? 's' : '') . ' Detected]' . PHP_EOL . PHP_EOL;
+            $this->console->append('[' . $new . ' New Module' . (($new > 1) ? 's' : '') . ' Detected]' . PHP_EOL);
         }
 
-        echo "    ID  \tActive\t\tModule" . PHP_EOL;
-        echo "    ----\t------\t\t------" . PHP_EOL;
+        $this->console->append("ID  \tActive\t\tModule");
+        $this->console->append("----\t------\t\t------");
 
         foreach ($modules as $module) {
             $moduleIds[] = $module->id;
-            echo PHP_EOL . '    ' . $module->id . "\t" . (($module->active) ? 'Yes' : 'No') . "\t\t" . $module->folder;
+            $this->console->append($module->id . "\t" . (($module->active) ? 'Yes' : 'No') . "\t\t" . $module->folder);
         }
 
-        echo PHP_EOL . PHP_EOL;
+        $this->console->append();
+        $this->console->send();
 
         $moduleId = null;
         while (!is_numeric($moduleId) || !in_array($moduleId, $moduleIds)) {
-            $moduleId = $this->console->prompt('    Select Module ID: ');
+            $moduleId = $this->console->prompt($this->console->getIndent() . 'Select Module ID: ');
         }
 
         return $moduleId;

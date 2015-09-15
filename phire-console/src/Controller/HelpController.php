@@ -14,35 +14,43 @@ class HelpController extends ConsoleController
      */
     public function index()
     {
-        $y = Console::BOLD_YELLOW;
-        $g = Console::BOLD_GREEN;
+        $yellow = Console::BOLD_YELLOW;
+        $green = Console::BOLD_GREEN;
 
-        echo '    ./phire ' . $this->console->colorize('help', $y) . "\t\tShow this help screen" . PHP_EOL;
-        echo '    ./phire ' . $this->console->colorize('config', $y) . "\t\tShow the current system configuration" . PHP_EOL;
-        echo '    ./phire ' . $this->console->colorize('version', $y) . "\t\tShow the current version" . PHP_EOL;
-
-        if (stripos(PHP_OS, 'win') === false) {
-            echo '    ./phire ' . $this->console->colorize('archive', $y) . "\t\tArchive the current system and content" . PHP_EOL . PHP_EOL;
-        } else {
-            echo PHP_EOL;
-        }
-
-        echo '    ./phire ' . $this->console->colorize('users', $y) . "\t\tList users" . PHP_EOL;
-        echo '    ./phire ' . $this->console->colorize('users', $y) . ' ' . $this->console->colorize('add', $g) . "\t\tAdd a user" . PHP_EOL;
-        echo '    ./phire ' . $this->console->colorize('users', $y) . ' ' . $this->console->colorize('password', $g) . "\tChange a user password" . PHP_EOL;
-        echo '    ./phire ' . $this->console->colorize('users', $y) . ' ' . $this->console->colorize('remove', $g) . "\tRemove a user" . PHP_EOL . PHP_EOL;
-
-        echo '    ./phire ' . $this->console->colorize('modules', $y) . "\t\tList modules" . PHP_EOL;
-        echo '    ./phire ' . $this->console->colorize('modules', $y) . ' ' . $this->console->colorize('install', $g) . "\tInstall a module or modules" . PHP_EOL;
-        echo '    ./phire ' . $this->console->colorize('modules', $y) . ' ' . $this->console->colorize('on', $g) . "\t\tActivate a module" . PHP_EOL;
-        echo '    ./phire ' . $this->console->colorize('modules', $y) . ' ' . $this->console->colorize('off', $g) . "\t\tDeactivate a module" . PHP_EOL;
-        echo '    ./phire ' . $this->console->colorize('modules', $y) . ' ' . $this->console->colorize('remove', $g) . "\tRemove a module";
+        $this->console->append('./phire ' . $this->console->colorize('help', $yellow) . "\t\tShow this help screen");
+        $this->console->append('./phire ' . $this->console->colorize('config', $yellow) . "\t\tShow the current system configuration");
+        $this->console->append('./phire ' . $this->console->colorize('version', $yellow) . "\t\tShow the current version");
 
         if (stripos(PHP_OS, 'win') === false) {
-            echo PHP_EOL . PHP_EOL;
-            echo '    ./phire ' . $this->console->colorize('sql', $y) . ' ' . $this->console->colorize('cli', $g) . "\t\tOpen SQL client" . PHP_EOL;
-            echo '    ./phire ' . $this->console->colorize('sql', $y) . ' ' . $this->console->colorize('dump', $g) . "\t\tDump the database";
+            $this->console->append('./phire ' . $this->console->colorize('archive', $yellow) . "\t\tArchive the current system and content");
         }
+
+        $this->console->append();
+        $this->console->append('./phire ' . $this->console->colorize('modules', $yellow) . "\t\tList modules");
+        $this->console->append('./phire ' . $this->console->colorize('modules', $yellow) . ' ' . $this->console->colorize('install', $green) . "\tInstall a module or modules");
+        $this->console->append('./phire ' . $this->console->colorize('modules', $yellow) . ' ' . $this->console->colorize('on', $green) . "\t\tActivate a module");
+        $this->console->append('./phire ' . $this->console->colorize('modules', $yellow) . ' ' . $this->console->colorize('off', $green) . "\t\tDeactivate a module");
+        $this->console->append('./phire ' . $this->console->colorize('modules', $yellow) . ' ' . $this->console->colorize('remove', $green) . "\tRemove a module");
+
+        $this->console->append();
+        $this->console->append('./phire ' . $this->console->colorize('users', $yellow) . "\t\tList users");
+        $this->console->append('./phire ' . $this->console->colorize('users', $yellow) . ' ' . $this->console->colorize('add', $green) . "\t\tAdd a user");
+        $this->console->append('./phire ' . $this->console->colorize('users', $yellow) . ' ' . $this->console->colorize('password', $green) . "\tChange a user password");
+        $this->console->append('./phire ' . $this->console->colorize('users', $yellow) . ' ' . $this->console->colorize('remove', $green) . "\tRemove a user");
+
+        $this->console->append();
+        $this->console->append('./phire ' . $this->console->colorize('roles', $yellow) . "\t\tList roles");
+        $this->console->append('./phire ' . $this->console->colorize('roles', $yellow) . ' ' . $this->console->colorize('add', $green) . "\t\tAdd a role");
+        $this->console->append('./phire ' . $this->console->colorize('roles', $yellow) . ' ' . $this->console->colorize('edit', $green) . "\t\tEdit a role");
+        $this->console->append('./phire ' . $this->console->colorize('roles', $yellow) . ' ' . $this->console->colorize('remove', $green) . "\tRemove a role");
+
+        if (stripos(PHP_OS, 'win') === false) {
+            $this->console->append();
+            $this->console->append('./phire ' . $this->console->colorize('sql', $yellow) . ' ' . $this->console->colorize('cli', $green) . "\t\tOpen SQL client");
+            $this->console->append('./phire ' . $this->console->colorize('sql', $yellow) . ' ' . $this->console->colorize('dump', $green) . "\t\tDump the database");
+        }
+
+        $this->console->send();
     }
 
 }

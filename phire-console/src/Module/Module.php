@@ -39,7 +39,7 @@ class Module extends \Pop\Module\Module
             $this->application->router()->addControllerParams(
                 '*', [
                     'application' => $this->application,
-                    'console'     => new Console()
+                    'console'     => new Console(120, '    ')
                 ]
             );
         }
@@ -53,7 +53,7 @@ class Module extends \Pop\Module\Module
             }
         }, 1000);
         $this->application->on('app.dispatch.post', function(){
-            echo PHP_EOL . PHP_EOL;
+            echo PHP_EOL;
         }, 1000);
 
         return $this;

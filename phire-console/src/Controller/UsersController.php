@@ -3,7 +3,9 @@
 namespace Phire\Console\Controller;
 
 use Phire\Model;
+use Phire\Table;
 use Pop\Console\Console;
+use Pop\Validator\Email;
 
 class UsersController extends ConsoleController
 {
@@ -20,12 +22,15 @@ class UsersController extends ConsoleController
         $user = new Model\User();
         $users = $user->getAll($roleId);
 
-        echo PHP_EOL . "    ID  \tUsername\tEmail" . PHP_EOL;
-        echo "    ----\t--------\t-----" . PHP_EOL;
+        $this->console->append();
+        $this->console->append("ID  \tUsername\tEmail");
+        $this->console->append("----\t--------\t-----");
 
         foreach ($users as $user) {
-            echo PHP_EOL . '    ' . $user->id . "\t" . $user->username . "\t\t" . $user->email;
+            $this->console->append($user->id . "\t" . $user->username . "\t\t" . $user->email);
         }
+
+        $this->console->send();
     }
 
     /**
@@ -35,55 +40,68 @@ class UsersController extends ConsoleController
      */
     public function add()
     {
-        $roleId = $this->getRoleId();
-
-        $role = new Model\Role();
+        $roleId   = $this->getRoleId();
+        $username = '';
+        $email    = null;
+        $role     = new Model\Role();
         $role->getById($roleId);
 
-        if ($role->email_as_username) {
-            $prompt = '    Enter Email: ';
-        } else {
-            $prompt = '    Enter Username: ';
-        }
+        $this->console->write();
+        $dupeUser = Table\Users::findBy(['username' => $username]);
 
-        echo PHP_EOL;
-
-        $username = '';
-        while ($username == '') {
-            $username = $this->console->prompt($prompt);
+        while (($username == '') || isset($dupeUser->id)) {
+            if (isset($dupeUser->id)) {
+                $this->console->write($this->console->colorize('That username already exists.', Console::BOLD_RED));
+                $username = '';
+            }
+            if ($role->email_as_username) {
+                while (!(new Email())->evaluate($username)) {
+                    $username = $this->console->prompt($this->console->getIndent() . 'Enter Email: ');
+                }
+                $email = $username;
+            } else {
+                while ($username == '') {
+                    $username = $this->console->prompt($this->console->getIndent() . 'Enter Username: ');
+                }
+                if ($role->email_required) {
+                    $email = '';
+                    while (!(new Email())->evaluate($email)) {
+                        $email = $this->console->prompt($this->console->getIndent() . 'Enter Email: ');
+                    }
+                }
+            }
+            $dupeUser = Table\Users::findBy(['username' => $username]);
         }
 
         $password = '';
         while ($password == '') {
-            $password = $this->console->prompt('    Enter Password: ');
+            $password = $this->console->prompt($this->console->getIndent() . 'Enter Password: ');
         }
 
         $active = '';
         while ((strtolower($active) != 'y') && (strtolower($active) != 'n')) {
-            $active = $this->console->prompt('    Active? (Y/N): ');
+            $active = $this->console->prompt($this->console->getIndent() . 'Active? (Y/N): ');
         }
 
         $verified = '';
         while ((strtolower($verified) != 'y') && (strtolower($verified) != 'n')) {
-            $verified = $this->console->prompt('    Verified? (Y/N): ');
+            $verified = $this->console->prompt($this->console->getIndent() . 'Verified? (Y/N): ');
         }
 
         $fields = [
             'role_id'   => $roleId,
             'username'  => $username,
             'password1' => $password,
+            'email'     => $email,
             'active'    => (strtolower($active) == 'y') ? 1 : 0,
             'verified'  => (strtolower($verified) == 'y') ? 1 : 0
         ];
 
-        if ($role->email_as_username) {
-            $fields['email'] = $username;
-        }
-
         $user = new Model\User();
         $user->save($fields);
 
-        echo PHP_EOL . '    ' . $this->console->colorize('User Added!', Console::BOLD_GREEN);
+        $this->console->write();
+        $this->console->write($this->console->colorize('User Added!', Console::BOLD_GREEN));
     }
 
     /**
@@ -99,24 +117,26 @@ class UsersController extends ConsoleController
         $users   = $user->getAll($roleId);
         $userIds = [];
 
-        echo PHP_EOL . "    ID  \tUsername\tEmail" . PHP_EOL;
-        echo "    ----\t--------\t-----" . PHP_EOL;
+        $this->console->append();
+        $this->console->append("ID  \tUsername\tEmail");
+        $this->console->append("----\t--------\t-----");
 
         foreach ($users as $user) {
             $userIds[] = $user->id;
-            echo PHP_EOL . '    ' . $user->id . "\t" . $user->username . "\t\t" . $user->email;
+            $this->console->append($user->id . "\t" . $user->username . "\t\t" . $user->email);
         }
 
-        echo PHP_EOL . PHP_EOL;
+        $this->console->append();
+        $this->console->send();
 
         $userId = null;
         while (!is_numeric($userId) || !in_array($userId, $userIds)) {
-            $userId = $this->console->prompt('    Select User ID: ');
+            $userId = $this->console->prompt($this->console->getIndent() . 'Select User ID: ');
         }
 
         $password = '';
         while ($password == '') {
-            $password = $this->console->prompt('    Enter New Password: ');
+            $password = $this->console->prompt($this->console->getIndent() . 'Enter New Password: ');
         }
 
         $user = new Model\User();
@@ -126,7 +146,8 @@ class UsersController extends ConsoleController
             'password1' => $password
         ]);
 
-        echo PHP_EOL . '    ' . $this->console->colorize('User Password Updated!', Console::BOLD_GREEN);
+        $this->console->write();
+        $this->console->write($this->console->colorize('User Password Updated!', Console::BOLD_GREEN));
     }
 
     /**
@@ -142,25 +163,28 @@ class UsersController extends ConsoleController
         $users = $user->getAll($roleId);
         $userIds = [];
 
-        echo PHP_EOL . "    ID  \tUsername\tEmail" . PHP_EOL;
-        echo "    ----\t--------\t-----" . PHP_EOL;
+        $this->console->append();
+        $this->console->append("ID  \tUsername\tEmail");
+        $this->console->append("----\t--------\t-----");
 
         foreach ($users as $user) {
             $userIds[] = $user->id;
-            echo PHP_EOL . '    ' . $user->id . "\t" . $user->username . "\t\t" . $user->email;
+            $this->console->append($user->id . "\t" . $user->username . "\t\t" . $user->email);
         }
 
-        echo PHP_EOL . PHP_EOL;
+        $this->console->append();
+        $this->console->send();
 
         $userId = null;
         while (!is_numeric($userId) || !in_array($userId, $userIds)) {
-            $userId = $this->console->prompt('    Select User ID: ');
+            $userId = $this->console->prompt($this->console->getIndent() . 'Select User ID: ');
         }
 
         $user = new Model\User();
         $user->remove(['rm_users' => [$userId]]);
 
-        echo PHP_EOL . '    ' . $this->console->colorize('User Removed!', Console::BOLD_RED);
+        $this->console->write();
+        $this->console->write($this->console->colorize('User Removed!', Console::BOLD_RED));
     }
 
     /**
@@ -174,14 +198,15 @@ class UsersController extends ConsoleController
         $roleIds = [];
         foreach ($roles as $role) {
             $roleIds[] = $role->id;
-            echo '    ' . $role->name . ":\t" . $role->id . PHP_EOL;
+            $this->console->append($role->name . ":\t" . $role->id);
         }
 
-        echo PHP_EOL;
+        $this->console->append();
+        $this->console->send();
 
         $roleId = null;
         while (!is_numeric($roleId) || !in_array($roleId, $roleIds)) {
-            $roleId = $this->console->prompt('    Select Role ID: ');
+            $roleId = $this->console->prompt($this->console->getIndent() . 'Select Role ID: ');
         }
 
         return $roleId;

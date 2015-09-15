@@ -14,7 +14,9 @@ class VersionController extends ConsoleController
      */
     public function index()
     {
-        echo '    Phire CMS ' . \Phire\Module::VERSION;
+        $this->console->write(
+            'Phire CMS ' . $this->console->colorize(\Phire\Module::VERSION, Console::BOLD_CYAN)
+        );
     }
 
 }

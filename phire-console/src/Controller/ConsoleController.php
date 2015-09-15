@@ -93,16 +93,6 @@ class ConsoleController extends \Pop\Controller\AbstractController
     }
 
     /**
-     * Version action method
-     *
-     * @return void
-     */
-    public function version()
-    {
-        echo 'Version' . PHP_EOL;
-    }
-
-    /**
      * Default error action method
      *
      * @throws \Phire\Exception
