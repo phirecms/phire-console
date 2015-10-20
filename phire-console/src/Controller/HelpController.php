@@ -20,6 +20,7 @@ class HelpController extends ConsoleController
         $this->console->append('./phire ' . $this->console->colorize('help', $yellow) . "\t\tShow this help screen");
         $this->console->append('./phire ' . $this->console->colorize('config', $yellow) . "\t\tShow the current system configuration");
         $this->console->append('./phire ' . $this->console->colorize('version', $yellow) . "\t\tShow the current version");
+        $this->console->append('./phire ' . $this->console->colorize('update', $yellow) . "\t\tUpdate the system");
 
         if (stripos(PHP_OS, 'win') === false) {
             $this->console->append('./phire ' . $this->console->colorize('archive', $yellow) . "\t\tArchive the current system and content");
@@ -31,6 +32,7 @@ class HelpController extends ConsoleController
         $this->console->append('./phire ' . $this->console->colorize('modules', $yellow) . ' ' . $this->console->colorize('on', $green) . "\t\tActivate a module");
         $this->console->append('./phire ' . $this->console->colorize('modules', $yellow) . ' ' . $this->console->colorize('off', $green) . "\t\tDeactivate a module");
         $this->console->append('./phire ' . $this->console->colorize('modules', $yellow) . ' ' . $this->console->colorize('remove', $green) . "\tRemove a module");
+        $this->console->append('./phire ' . $this->console->colorize('modules', $yellow) . ' ' . $this->console->colorize('update', $green) . "\tUpdate a module");
 
         $this->console->append();
         $this->console->append('./phire ' . $this->console->colorize('users', $yellow) . "\t\tList users");

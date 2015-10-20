@@ -113,6 +113,75 @@ class ModulesController extends ConsoleController
     }
 
     /**
+     * Update action method
+     *
+     * @return void
+     */
+    public function update()
+    {
+        $config   = new Model\Config();
+        $updates  = $config->getUpdates();
+        $moduleId = $this->getModuleId();
+        $module   = Table\Modules::findById($moduleId);
+
+        if (isset($module->id)) {
+            if (isset($updates->modules[$module->folder]) && (version_compare($updates->modules[$module->folder], $module->version) == 0)) {
+                $this->console->append();
+                $this->console->append($this->console->colorize('The \'' . $module->folder .'\' module is available for update.', Console::BOLD_YELLOW));
+                $this->console->append();
+                $this->console->append($this->console->colorize('Please back up all of your files and your database before proceeding.', Console::BOLD_RED));
+                $this->console->append();
+                $this->console->send();
+
+                $update = null;
+                while ((strtolower($update) != 'y') && (strtolower($update) != 'n')) {
+                    $update = $this->console->prompt($this->console->getIndent() . 'Update the \'' . $module->folder .'\' module? (Y/N) ');
+                }
+
+                if (strtolower($update) == 'y') {
+                    if (is_writable(__DIR__ . '/../../../') &&
+                        is_writable(__DIR__ . '/../../../' . $module->folder) &&
+                        is_writable(__DIR__ . '/../../../' . $module->folder . '.zip')) {
+                        $updater = new \Phire\Updater($module->folder);
+                        $updater->getUpdate($module->folder);
+
+                        clearstatcache();
+
+                        $updaterClass = $module->prefix . 'Updater';
+
+                        if (class_exists($updaterClass)) {
+                            $updater = new $updaterClass($module->folder);
+                            $updater->runPost();
+                        } else if (file_exists(__DIR__ . '/../../../' . $module->folder . '/src/Updater.php')) {
+                            include __DIR__ . '/../../../' . $module->folder . '/src/Updater.php';
+                            if (class_exists($updaterClass)) {
+                                $updater = new $updaterClass($module->folder);
+                                $updater->runPost();
+                            }
+                        } else {
+                            $module->updated_on = date('Y-m-d H:i:s');
+                            $module->save();
+                        }
+
+                        $this->console->append();
+                        $this->console->append($this->console->colorize('Update completed successfully!', Console::BOLD_CYAN));
+                        $this->console->append($this->console->colorize('You have updated \'' . $module->folder . '\' to version ' . $updates->modules[$module->folder], Console::BOLD_CYAN));
+                        $this->console->send();
+                    } else {
+                        $this->console->append();
+                        $this->console->append($this->console->colorize('The module folders are not writable. They must be writable to update the module.', Console::BOLD_RED));
+                        $this->console->send();
+                    }
+                }
+            } else {
+                $this->console->append();
+                $this->console->append($this->console->colorize('The \'' . $module->folder .'\' module is up-to-date!', Console::BOLD_GREEN));
+                $this->console->send();
+            }
+        }
+    }
+
+    /**
      * Get module id
      *
      * @return int
