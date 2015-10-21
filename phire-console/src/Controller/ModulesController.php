@@ -125,17 +125,24 @@ class ModulesController extends ConsoleController
         $module   = Table\Modules::findById($moduleId);
 
         if (isset($module->id)) {
-            if (isset($updates->modules[$module->folder]) && (version_compare($updates->modules[$module->folder], $module->version) == 0)) {
+            if (isset($updates->modules[$module->folder]) &&
+                (version_compare($updates->modules[$module->folder], $module->version) < 0)) {
                 $this->console->append();
-                $this->console->append($this->console->colorize('The \'' . $module->folder .'\' module is available for update.', Console::BOLD_YELLOW));
+                $this->console->append($this->console->colorize(
+                    'The \'' . $module->folder .'\' module is available for update.', Console::BOLD_YELLOW
+                ));
                 $this->console->append();
-                $this->console->append($this->console->colorize('Please back up all of your files and your database before proceeding.', Console::BOLD_RED));
+                $this->console->append($this->console->colorize(
+                    'Please back up all of your files and your database before proceeding.', Console::BOLD_RED
+                ));
                 $this->console->append();
                 $this->console->send();
 
                 $update = null;
                 while ((strtolower($update) != 'y') && (strtolower($update) != 'n')) {
-                    $update = $this->console->prompt($this->console->getIndent() . 'Update the \'' . $module->folder .'\' module? (Y/N) ');
+                    $update = $this->console->prompt(
+                        $this->console->getIndent() . 'Update the \'' . $module->folder .'\' module? (Y/N) '
+                    );
                 }
 
                 if (strtolower($update) == 'y') {
@@ -164,18 +171,26 @@ class ModulesController extends ConsoleController
                         }
 
                         $this->console->append();
-                        $this->console->append($this->console->colorize('Update completed successfully!', Console::BOLD_CYAN));
-                        $this->console->append($this->console->colorize('You have updated \'' . $module->folder . '\' to version ' . $updates->modules[$module->folder], Console::BOLD_CYAN));
+                        $this->console->append($this->console->colorize(
+                            'Update completed successfully!', Console::BOLD_CYAN
+                        ));
+                        $this->console->append($this->console->colorize(
+                            'You have updated \'' . $module->folder . '\' to version ' . $updates->modules[$module->folder] . '.', Console::BOLD_CYAN
+                        ));
                         $this->console->send();
                     } else {
                         $this->console->append();
-                        $this->console->append($this->console->colorize('The module folders are not writable. They must be writable to update the module.', Console::BOLD_RED));
+                        $this->console->append($this->console->colorize(
+                            'The module folders are not writable. They must be writable to update the module.', Console::BOLD_RED
+                        ));
                         $this->console->send();
                     }
                 }
             } else {
                 $this->console->append();
-                $this->console->append($this->console->colorize('The \'' . $module->folder .'\' module is up-to-date!', Console::BOLD_GREEN));
+                $this->console->append($this->console->colorize(
+                    'The \'' . $module->folder .'\' module is up-to-date!', Console::BOLD_GREEN
+                ));
                 $this->console->send();
             }
         }
