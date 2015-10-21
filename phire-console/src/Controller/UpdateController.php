@@ -18,7 +18,7 @@ class UpdateController extends ConsoleController
         $config  = new Model\Config();
         $updates = $config->getUpdates();
 
-        if (version_compare($updates->phirecms, \Phire\Module::VERSION) == 0) {
+        if (version_compare($updates->phirecms, \Phire\Module::VERSION) < 0) {
             $this->console->append($this->console->colorize(
                 $updates->phirecms . ' is available for update.', Console::BOLD_YELLOW
             ));
