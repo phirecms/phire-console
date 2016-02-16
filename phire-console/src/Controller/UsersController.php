@@ -151,6 +151,80 @@ class UsersController extends ConsoleController
     }
 
     /**
+     * Activate action method
+     *
+     * @return void
+     */
+    public function activate()
+    {
+        $roleId = $this->getRoleId();
+
+        $user = new Model\User();
+        $users = $user->getAll($roleId);
+        $userIds = [];
+
+        $this->console->append();
+        $this->console->append("ID  \tUsername\tEmail");
+        $this->console->append("----\t--------\t-----");
+
+        foreach ($users as $user) {
+            $userIds[] = $user->id;
+            $this->console->append($user->id . "\t" . $user->username . "\t\t" . $user->email);
+        }
+
+        $this->console->append();
+        $this->console->send();
+
+        $userId = null;
+        while (!is_numeric($userId) || !in_array($userId, $userIds)) {
+            $userId = $this->console->prompt($this->console->getIndent() . 'Select User ID: ');
+        }
+
+        $user = new Model\User();
+        $user->process(['process_users' => [$userId], 'user_process_action' => 1]);
+
+        $this->console->write();
+        $this->console->write($this->console->colorize('User Activated!', Console::BOLD_GREEN));
+    }
+
+    /**
+     * Deactivate action method
+     *
+     * @return void
+     */
+    public function deactivate()
+    {
+        $roleId = $this->getRoleId();
+
+        $user = new Model\User();
+        $users = $user->getAll($roleId);
+        $userIds = [];
+
+        $this->console->append();
+        $this->console->append("ID  \tUsername\tEmail");
+        $this->console->append("----\t--------\t-----");
+
+        foreach ($users as $user) {
+            $userIds[] = $user->id;
+            $this->console->append($user->id . "\t" . $user->username . "\t\t" . $user->email);
+        }
+
+        $this->console->append();
+        $this->console->send();
+
+        $userId = null;
+        while (!is_numeric($userId) || !in_array($userId, $userIds)) {
+            $userId = $this->console->prompt($this->console->getIndent() . 'Select User ID: ');
+        }
+
+        $user = new Model\User();
+        $user->process(['process_users' => [$userId], 'user_process_action' => 0]);
+
+        $this->console->write();
+        $this->console->write($this->console->colorize('User Deactivated!', Console::BOLD_YELLOW));
+    }
+
+    /**
      * Remove action method
      *
      * @return void
@@ -181,7 +255,7 @@ class UsersController extends ConsoleController
         }
 
         $user = new Model\User();
-        $user->remove(['rm_users' => [$userId]]);
+        $user->process(['process_users' => [$userId], 'user_process_action' => -1]);
 
         $this->console->write();
         $this->console->write($this->console->colorize('User Removed!', Console::BOLD_RED));

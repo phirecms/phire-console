@@ -38,6 +38,8 @@ class HelpController extends ConsoleController
         $this->console->append('./phire ' . $this->console->colorize('users', $yellow) . "\t\tList users");
         $this->console->append('./phire ' . $this->console->colorize('users', $yellow) . ' ' . $this->console->colorize('add', $green) . "\t\tAdd a user");
         $this->console->append('./phire ' . $this->console->colorize('users', $yellow) . ' ' . $this->console->colorize('password', $green) . "\tChange a user password");
+        $this->console->append('./phire ' . $this->console->colorize('users', $yellow) . ' ' . $this->console->colorize('activate', $green) . "\tActivate a user");
+        $this->console->append('./phire ' . $this->console->colorize('users', $yellow) . ' ' . $this->console->colorize('deactivate', $green) . "\tDeactivate a user");
         $this->console->append('./phire ' . $this->console->colorize('users', $yellow) . ' ' . $this->console->colorize('remove', $green) . "\tRemove a user");
 
         $this->console->append();
