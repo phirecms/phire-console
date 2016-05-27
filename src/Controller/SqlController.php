@@ -1,7 +1,28 @@
 <?php
+/**
+ * Phire Console Module
+ *
+ * @link       https://github.com/phirecms/phire-console
+ * @author     Nick Sagona, III <dev@nolainteractive.com>
+ * @copyright  Copyright (c) 2009-2016 NOLA Interactive, LLC. (http://www.nolainteractive.com)
+ * @license    http://www.phirecms.org/license     New BSD License
+ */
 
+/**
+ * @namespace
+ */
 namespace Phire\Console\Controller;
 
+/**
+ * Console Sql Controller class
+ *
+ * @category   Phire\Console
+ * @package    Phire\Console
+ * @author     Nick Sagona, III <dev@nolainteractive.com>
+ * @copyright  Copyright (c) 2009-2016 NOLA Interactive, LLC. (http://www.nolainteractive.com)
+ * @license    http://www.phirecms.org/license     New BSD License
+ * @version    1.0.0
+ */
 class SqlController extends ConsoleController
 {
 

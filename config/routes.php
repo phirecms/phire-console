@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * phire-console routes
+ */
 return [
     'archive [<type>]' => [
         'controller' => 'Phire\Console\Controller\SqlController',
