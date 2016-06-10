@@ -26,9 +26,9 @@ try {
     }
 
     // Get the autoloader
-    $autoloader = require __DIR__ . '/../' . APP_PATH . '/vendor/autoload.php';
-    $appConfig  = include __DIR__ . '/../' . APP_PATH . '/config/application.php';
-    $config     = include MODULES_PATH . '/phire-console/config/module.php';
+    $autoloader = require APP_ABS_PATH . '/vendor/autoload.php';
+    $appConfig  = include APP_ABS_PATH . '/config/application.php';
+    $config     = include MODULES_ABS_PATH . '/phire-console/config/module.php';
 
     $config['phire-console']['services'] = $appConfig['services'];
     $config['phire-console']['routes']   = $config['phire-console']['cli-routes'];
