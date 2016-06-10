@@ -60,7 +60,7 @@ class ConsoleController extends \Pop\Controller\AbstractController
      *
      * @param  Application $application
      * @param  Console     $console
-     * @return self
+     * @return ConsoleController
      */
     public function __construct(Application $application, Console $console)
     {
